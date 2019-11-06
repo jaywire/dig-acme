@@ -5,6 +5,7 @@ $cmdDig = '/usr/bin/dig';
 $acme = '_acme-challenge.';
 $dmgdev = '._acme-dns.dmgdev.com.';
 
+// checking that dig exists on machine
 if (file_exists($cmdDig)) {
     $digCheck = true;
 } else {
@@ -21,20 +22,20 @@ return $domain;
 
 echo "What domain are we validating? ";
 
+// take input if domain fails regex check and loop back through
 while(validDom($domain) == false) {
-    // take input
     $domain = rtrim(fgets(STDIN));
     if(validDom($domain) == false) {
         echo "Please enter a valid domain. Do not include the protocol (http, https): ";
     }
 }
-
+// running dig command if dig exists and domain passes validation
 if($digCheck) {
     $acmeCheck = "$cmdDig @1.1.1.1 ".$acme.$domain." cname +short";
     $strLookup = `$acmeCheck`;
     $strLookup = trim($strLookup);
 } 
-
+// checking dig response for expected response and and returning detailed errors
 if ($strLookup == $domain.$dmgdev) {
     echo "\n\nSUCCESS! ".$domain." HAS A VALID ACME-CHALLENGE RECORD!\n\nRETURNED HOST: ".$acme.$domain."\nEXPECTED HOST: ".$acme.$domain."\n\nRETURNED TARGET: ".$strLookup."\nEXPECTED TARGET: ".$domain.$dmgdev."\n\n".$acme.$domain." is an alias for ".$domain.$dmgdev."\n\n";
 } elseif ($strLookup != $domain.$dmgdev) {
@@ -52,5 +53,7 @@ if ($strLookup == $domain.$dmgdev) {
         exit();
     }
 }
+
 echo "\n";
+
 ?>
