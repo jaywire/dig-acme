@@ -52,8 +52,5 @@ if ($strLookup == $domain.$dmgdev) {
         exit();
     }
 }
-
-/*
-//print_r($strLookup);
-*/
 echo "\n";
+?>
