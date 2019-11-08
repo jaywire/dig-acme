@@ -47,7 +47,7 @@ echo "What DNS server are we using? To use the default, hit Enter: ";
 while(validIP($dnsIP) == false) {
     $dnsIP = rtrim(fgets(STDIN));
     if ($dnsIP == null) {
-        echo "\nOK - using default DNS (".$dnsDefault.") for this check.\n";
+        echo "\Used default DNS (".$dnsDefault.") for this check.\n";
         $dnsIP = $dnsDefault;
     } elseif(validIP($dnsIP) == false) {
         echo "***ERROR!*** Please enter a valid IPV4 address. If you'd like to use the default, hit ENTER: ";
@@ -70,8 +70,11 @@ if ($strLookup == $domain.$dmgdev) {
     if ($strLookupFail == $domain.$dmgdev) {
         echo "\nFAILED! ".$domain." HAS AN INVALID ACME-CHALLENGE RECORD!\nPLEASE CHECK THE HOST PORTION OF THE RECORD!\n\nEXPECTED HOST: ".$acme.$domain."\nRETURNED HOST: ".$acme.$domain.".".$domain."\n\nIn many cases, the customer has pasted the *ENTIRE* HOST record into their DNS registrar.\nHave them enter the HOST portion as: _acme-challenge\n\n";
         exit();
-    } elseif ($strLookup != $domain.$dmgdev && $strLookupFail == null && $strLookup != $domain.".") {
+    } elseif ($strLookup != $domain.$dmgdev && $strLookupFail == null && $strLookup != $domain."." && $strLookup != null) {
         echo "\nFAILED! ".$domain." HAS AN INVALID ACME-CHALLENGE RECORD!\nPLEASE CHECK THE TARGET PORTION OF THE RECORD!\n\nEXPECTED TARGET: ".$domain."._acme-dns.dmgdev.com\nRETURNED TARGET: ".$strLookup."\n\n";
+        exit();
+    } elseif ($strLookup == null && $strLookupFail == null) {
+        echo "\nFAILED! ".$domain." HAS NO VALID ACME-CHALLENGE RECORD!\nPLEASE CHECK THE DOMAIN ENTRIES AND TRY AGAIN!\n\nEXPECTED HOST: ".$acme.$domain."\nEXPECTED TARGET: ".$domain."._acme-dns.dmgdev.com\n\n";
         exit();
     } elseif ($strLookup == $domain."." && $strLookupFail == $domain.".") {
         echo "\nFAILED! ".$domain." IS SHOWING A WILDCARD RESPONSE. PLEASE CHECK HOST ENTRY OF THE CNAME RECORD.\n\n";
