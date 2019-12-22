@@ -60,7 +60,8 @@ if($digCheck) {
     $acmeCheck = "$cmdDig @".$dnsIP." ".$acme.$domain." cname +short";
     $strLookup = `$acmeCheck`;
     $strLookup = trim($strLookup);
-} 
+}
+
 // checking dig response for expected response and and returning detailed errors
 if ($strLookup == $domain.$dmgdev) {
     echo "\n\nSUCCESS! ".$domain." HAS A VALID ACME-CHALLENGE RECORD!\n\nRETURNED HOST: ".$acme.$domain."\nEXPECTED HOST: ".$acme.$domain."\n\nRETURNED TARGET: ".$strLookup."\nEXPECTED TARGET: ".$domain.$dmgdev."\n\n".$acme.$domain." is an alias for ".$domain.$dmgdev."\n\n";
