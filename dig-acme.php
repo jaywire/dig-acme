@@ -4,7 +4,7 @@
 // defininig variables
 $cmdDig = '/usr/bin/dig';
 $acme = '_acme-challenge.';
-$dmgdev = '._acme-dns.dmgdev.com.';
+$dmgdev = '._acme-dns.example.com.';
 $dnsDefault = '1.1.1.1';
 
 // checking that dig exists on machine
@@ -14,6 +14,7 @@ if (file_exists($cmdDig)) {
     echo "\n*** ERROR *** ||| $cmdDig not found, please install dig\n" . PHP_EOL;
     exit();
 }
+
 // validate $domain provided by user is a valid domain
 function validDom($domain) {
     if(!preg_match("/^(?!\-)(?:[a-zA-Z\d\-]{0,62}[a-zA-Z\d]\.){1,126}(?!\d+)[a-zA-Z\d]{1,63}$/i", $domain) ) {

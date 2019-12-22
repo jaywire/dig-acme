@@ -1,8 +1,10 @@
 # dig-acme
 
-This CLI PHP script is an internal project for my own environment, but the purpose of this script is to check for a valid "_acme-challenge" CNAME record when using DNS-01 validation with LetsEncrypt. This is a port of my previous project, acme-check. I took what I learned from that project and decided to use "dig" instead of the PHP function "dns_get_record" due to being able to define the DNS server to use for the lookup. 
+This CLI PHP script is an internal project for my own environment, but the purpose of this script is to check for a valid "_acme-challenge" CNAME record when using DNS-01 validation with LetsEncrypt. This is a port of my previous project, acme-check. I took what I learned from that project and decided to use "dig" instead of the PHP function "dns_get_record" due to being able to define the DNS server to use for the lookup, as well as the +short operator available for dig which only returns the result you asked for - and nothing else. 
 
-This was a tool for our Tier 3 Support Technicians to verify our clients entered the DNS-01 TXT record correctly on their end. Typically, we host DNS for our customers but in some cases they maintain their own DNS, so we have to send them the records required for our platform to work on their domain.
+This was a tool for our Tier 3 Support Technicians to verify our clients entered the DNS-01 TXT record correctly on their end. Typically, we host DNS for our customers but in some cases they maintain their own DNS, so we have to send them the records required for our platform to work on their domain. Generating a certificate with certbot/Letsencrpyt is outside the scope of this project. For more information about certbot and Letsencrypt, see their page: 
+
+https://github.com/certbot/certbot
 
 For LetsEncrpyt certfiicates, there are multiple validation methods. We use DNS-01 for our platform and this tool allows you to verify the record is entered correctly, and also does some overly complex error checking and provides feedback to the user. Much of the error handling could be stripped out, but this tool is used by people who may not be DNS experts.  
 
@@ -17,6 +19,9 @@ _acme-challenge.customerdomain.com "IS AN ALIAS OF" _acme-challenge.domainwecont
 In our DNS: 
 
 TXT _acme-challenge.domainwecontrol.dev returns "667drNmQL3vX6bu8YZlgy0wKNBlCny8yrjF1lSaUndc"
+
+
+This was my very first PHP project - there will likely not be the most elegant code you've ever seen. It works for my needs, and I learned a ton while building it. 
 
 
 # Why?
