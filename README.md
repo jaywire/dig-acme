@@ -1,16 +1,29 @@
 # dig-acme
 
-This PHP script is an internal project for my own environment, but the purpose of this script is to check for a valid "_acme-challenge" CNAME record when using DNS-01 validation with LetsEncrypt. This is a port of my previous project, acme-check. I took what I learned from that project and decided to use "dig" instead of the PHP function "dns_get_record" due to being able to define the DNS server to use for the lookup. 
+This CLI PHP script is an internal project for my own environment, but the purpose of this script is to check for a valid "_acme-challenge" CNAME record when using DNS-01 validation with LetsEncrypt. This is a port of my previous project, acme-check. I took what I learned from that project and decided to use "dig" instead of the PHP function "dns_get_record" due to being able to define the DNS server to use for the lookup. 
 
-DNS-01 validation will follow a CNAME as if it were a TXT record, as long as you use the same formatting as required for the TXT record.
+This was a tool for our Tier 3 Support Technicians to verify our clients entered the DNS-01 TXT record correctly on their end. Typically, we host DNS for our customers but in some cases they maintain their own DNS, so we have to send them the records required for our platform to work on their domain.
 
-_acme-challenge.domain.dev
+For LetsEncrpyt certfiicates, there are multiple validation methods. We use DNS-01 for our platform and this tool allows you to verify the record is entered correctly, and also does some overly complex error checking and provides feedback to the user. Much of the error handling could be stripped out, but this tool is used by people who may not be DNS experts.  
 
-You can then point this to a record within your own DNS zone. 
+DNS-01 validation will happily follow a CNAME as if it were a TXT record, as long as you use the same formatting as required for the TXT record. We instruct customers to enter a record pointing back to a unique record in our DNS zone. This way, when we provision the certificate, we can place the TXT record into our own DNS server with the validation string. 
 
-This is useful in a situation where you may not control the DNS zone you are managing. Due to the volatility of LetsEncrpyt Certificates, it can be troublesome to coordinate with the person(s) who control another domain and have them place the TXT validation record, and also count on them to place it correctly. Having them place a CNAME record once is much easier in this case. 
+It looks a little like this:
 
-The only thing you will need to do is adjust the variable for $dmgdev to something within your DNS zone. I suggest creating a TXT record for the domain.dev._acme-dns.yourzone.com and placing your TXT value here. (This can be automated, but that isn't the purpose of this script at this time.)
+In clients DNS: 
+
+_acme-challenge.customerdomain.com "IS AN ALIAS OF" _acme-challenge.domainwecontrol.dev
+
+In our DNS: 
+
+TXT _acme-challenge.domainwecontrol.dev returns "667drNmQL3vX6bu8YZlgy0wKNBlCny8yrjF1lSaUndc"
+
+
+# Why?
+
+This is useful in a situation where you may not control the DNS zone you are managing. Due to the volatility of LetsEncrpyt Certificates (90 day expiration period), it can be troublesome to coordinate with the person(s) who control another domain and have them place the TXT validation record, and also count on them to place it correctly. Having them place a CNAME record once is much easier in this case. 
+
+The only thing you will need to do is adjust the variable for $dmgdev to something within your DNS zone. I suggest creating a TXT record for the domain.dev._acme-dns.yourzone.com and placing your TXT value here. This can be automated, but that is outside the scope of this project.
 
 By the above logic, that means your value for $dmgdev is ._acme-dns.yourzone.com
 
